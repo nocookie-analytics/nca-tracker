@@ -2,7 +2,7 @@ import Perfume from "perfume.js";
 import { IPerfumeNavigationTiming } from "perfume.js/dist/types/types";
 import { http } from "./utils";
 
-const domain = "http://geektower.emoh";
+const domain = process.env.ANALYTICS_DOMAIN;
 const eventUrl = `${domain}/api/v1/e/`;
 let pageViewId: string = "";
 
