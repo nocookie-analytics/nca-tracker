@@ -1,7 +1,5 @@
-import objectHash from "object-hash";
 import Perfume from "perfume.js";
 import { IPerfumeNavigationTiming } from "perfume.js/dist/types/types";
-import "whatwg-fetch";
 import { http } from "./utils";
 
 const domain = "http://geektower.emoh";
@@ -51,7 +49,6 @@ const perfume = new Perfume({
           const resp = await http(url);
           const result = await resp.json();
           pageViewId = result.pvid;
-          console.log("pageViewId:", pageViewId);
         }
         break;
       case "lcp":
