@@ -11,6 +11,10 @@ jobs:
       DOCKER_IMAGE_CLIENT: eu.gcr.io/no-cookie-analytics/nca-client
 
     steps:
+    - name: Install python
+      run: |
+        apk add --no-cache python3
+
     - name: Setup env file
       run: |
         echo "TAG=$GITHUB_SHA" | sed 's|/|-|g' >> .env
