@@ -32,6 +32,7 @@ jobs:
     - name: Build docker images
       run: |
         export BRANCH_TAG=$(echo "$GITHUB_REF" | sed 's|/|-|g')
+        ls
         docker build . --progress=plain -t $DOCKER_IMAGE_CLIENT:$GITHUB_SHA
 
     - name: Push docker
