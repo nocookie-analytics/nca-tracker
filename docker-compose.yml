@@ -1,0 +1,21 @@
+version: "3.6"
+
+services:
+  client:
+    image: "${DOCKER_IMAGE_CLIENT-ncaclient}:${TAG-latest}"
+    build:
+      context: .
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+      restart_policy:
+        window: 30s
+        condition: on-failure
+      labels:
+        - traefik.enable=true
+        - traefik.constraint-label-stack=${TRAEFIK_TAG}
+        - traefik.http.routers.${STACK_NAME}-nca-client-http.rule=Path(`/latest.js`) || Path(`/latest.js.map`)
+        - traefik.http.services.${STACK_NAME}-nca-client.loadbalancer.server.port=80
