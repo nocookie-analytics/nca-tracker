@@ -11,6 +11,7 @@ jobs:
       DOCKER_IMAGE_CLIENT: eu.gcr.io/no-cookie-analytics/nca-client
 
     steps:
+    - uses: actions/checkout@v2
     - name: Install python
       run: |
         apk add --no-cache python3
@@ -28,7 +29,6 @@ jobs:
     - name: Build docker images
       run: |
         export BRANCH_TAG=$(echo "$GITHUB_REF" | sed 's|/|-|g')
-        ls; pwd;
         docker build . --progress=plain -t $DOCKER_IMAGE_CLIENT:$GITHUB_SHA
 
     - name: Docker login
