@@ -25,15 +25,15 @@ jobs:
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
 
-    - name: Docker login
-      run: |
-        gcloud auth configure-docker
-
     - name: Build docker images
       run: |
         export BRANCH_TAG=$(echo "$GITHUB_REF" | sed 's|/|-|g')
-        ls
+        ls; pwd;
         docker build . --progress=plain -t $DOCKER_IMAGE_CLIENT:$GITHUB_SHA
+
+    - name: Docker login
+      run: |
+        gcloud auth configure-docker
 
     - name: Push docker
       run: |
