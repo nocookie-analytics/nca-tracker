@@ -10,6 +10,7 @@ jobs:
     env:
       DOCKER_REGISTRY: eu.gcr.io
       DOCKER_IMAGE_NAME: no-cookie-analytics/nca-client
+      SHA: "${GITHUB_SHA}"
 
     steps:
     - uses: actions/checkout@v2
@@ -21,5 +22,5 @@ jobs:
         password: "${{ secrets.GCP_SA_KEY }}"
         registry: ${{ env.DOCKER_REGISTRY }}
         image_name: ${{ env.DOCKER_IMAGE_NAME }}
-        image_tag: ${{ env.GITHUB_SHA }}
+        image_tag: ${{ env.SHA }}
         push_git_tag: true
