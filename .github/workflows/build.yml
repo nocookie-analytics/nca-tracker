@@ -9,7 +9,7 @@ jobs:
 
     env:
       DOCKER_REGISTRY: eu.gcr.io
-      DOCKER_IMAGE_NAME: nca-client
+      DOCKER_IMAGE_NAME: no-cookie-analytics/nca-client
 
     steps:
     - uses: actions/checkout@v2
@@ -23,4 +23,3 @@ jobs:
         image_name: ${{ env.DOCKER_IMAGE_NAME }}
         image_tag: latest
         push_git_tag: true
-        context: .
