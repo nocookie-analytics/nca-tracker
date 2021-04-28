@@ -5,7 +5,7 @@ set -e
 
 DOMAIN=${DOMAIN} \
 TAG=${TAG} \
-STACK_NAME=nca-client \
+STACK_NAME=${STACK_NAME} \
 docker-compose \
 -f docker-compose.yml \
 config > docker-stack.yml
