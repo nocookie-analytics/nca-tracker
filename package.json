@@ -27,8 +27,9 @@
     "since 2017-06"
   ],
   "scripts": {
-    "dev": "parcel index.html",
-    "build": "parcel build src/index.ts -o latest.js"
+    "dev": "DOMAIN_PREFIX=test. parcel index.html",
+    "build": "parcel build src/index.ts -o latest.js",
+    "build-test": "DOMAIN_PREFIX=test. parcel build --no-cache src/index.ts -o latest-test.js"
   },
   "jest": {
     "moduleFileExtensions": [
