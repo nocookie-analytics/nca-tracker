@@ -10,6 +10,8 @@ COPY ./ /app/
 
 RUN yarn build
 
+RUN yarn build-test
+
 
 FROM nginx:latest
 
