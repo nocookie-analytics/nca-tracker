@@ -3,7 +3,8 @@ import { IPerfumeNavigationTiming } from "perfume.js/dist/types/types";
 import { http } from "./utils";
 
 const domainPrefix = process.env.DOMAIN_PREFIX ? process.env.DOMAIN_PREFIX : "";
-const domain = `${domainPrefix}${process.env.ANALYTICS_DOMAIN}`;
+const protocol = process.env.FORCE_INSECURE_HTTP === "true" ? "http" : "https";
+const domain = `${protocol}://${domainPrefix}${process.env.ANALYTICS_DOMAIN}`;
 const eventUrl = `${domain}/api/v1/e/`;
 let pageViewId: string = "";
 
