@@ -8,76 +8,67 @@ const domain = `${protocol}://${domainPrefix}${process.env.ANALYTICS_DOMAIN}`;
 const eventUrl = `${domain}/api/v1/e/`;
 let pageViewId: string = "";
 
-const eventBaseData = () => {
+const getTimezone = (): string => {
   let tz: string;
   try {
     tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   } catch (e) {
-    tz = "null";
+    tz = "";
   }
-  const tzo = -new Date().getTimezoneOffset();
-
-  return {
-    url: document.URL,
-    pt: document.title,
-    ref: document.referrer,
-    tz: tz,
-    tzo: tzo.toString(),
-  };
+  return tz;
 };
 
-const perfume = new Perfume({
+const pendingEvents: Array<Array<string>> = [];
+const reportMetric = async (metricName: string, metricValue: string) => {
+  const urlParams = new URLSearchParams({
+    et: "metric",
+    url: document.URL,
+    pvid: pageViewId,
+    mn: metricName,
+    mv: metricValue.toString(),
+  });
+  const url = `${eventUrl}?${urlParams.toString()}`;
+  const resp = await http(url);
+  await resp.json();
+};
+
+const trackPageView = async () => {
+  const urlParams = new URLSearchParams({
+    et: "page_view",
+    url: document.URL,
+    ref: document.referrer,
+    tz: getTimezone(),
+  });
+  const url = `${eventUrl}?${urlParams.toString()}`;
+  const resp = await http(url);
+
+  const result = await resp.json();
+  pageViewId = result.pvid;
+  pendingEvents.forEach(async ([metricName, metricValue]) => {
+    console.log(metricName, metricValue);
+    await reportMetric(metricName, metricValue);
+  });
+};
+
+new Perfume({
   resourceTiming: false,
   analyticsTracker: async ({ metricName, data }) => {
     data = data as IPerfumeNavigationTiming;
     switch (metricName) {
-      case "navigationTiming":
-        {
-          const performance = window.performance?.getEntriesByType(
-            "navigation"
-          )[0] as any;
-          const { encodedBodySize } = performance;
-          const { timeToFirstByte, totalTime, downloadTime } = data;
-
-          const urlParams = new URLSearchParams({
-            ...eventBaseData(),
-            et: "page_view",
-            ttfb: timeToFirstByte?.toString() || "null",
-            tt: totalTime?.toString() || "null",
-            psb: encodedBodySize.toString(),
-            dt: downloadTime?.toString() || "null",
-          });
-          const url = `${eventUrl}?${urlParams.toString()}`;
-          const resp = await http(url);
-          const result = await resp.json();
-          pageViewId = result.pvid;
-        }
-        break;
       case "lcp":
       case "fid":
       case "fp":
       case "cls":
       case "lcpFinal":
-        const reportMetric = async () => {
-          const urlParams = new URLSearchParams({
-            ...eventBaseData(),
-            et: "metric",
-            pvid: pageViewId,
-            mn: metricName,
-            mv: data.toString(),
-          });
-          const url = `${eventUrl}?${urlParams.toString()}`;
-          const resp = await http(url);
-          const result = await resp.json();
-        };
-        const waitForPageViewId = async () => {
-          if (!pageViewId) {
-            setTimeout(waitForPageViewId, 500);
-          } else {
-            await reportMetric();
-          }
-        };
-        await waitForPageViewId();
+        if (!pageViewId) {
+          pendingEvents.push([metricName, data.toString()]);
+        } else {
+          reportMetric(metricName, data.toString());
+        }
     }
   },
 });
+
+(async function () {
+  await trackPageView();
+})();
