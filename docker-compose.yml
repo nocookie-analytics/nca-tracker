@@ -23,7 +23,7 @@ services:
         - traefik.constraint-label=traefik-public
         - traefik.http.routers.${STACK_NAME}-client-https.entrypoints=https
         - traefik.http.routers.${STACK_NAME}-client-https.tls=true
-        - traefik.http.routers.${STACK_NAME}-client-https.rule=(Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)) && (Path(`/latest.js`) || Path(`/latest.js.map`))
+        - traefik.http.routers.${STACK_NAME}-client-https.rule=(Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)) && (Path(`/latest.js`) || Path(`/latest.js.map`) || Path(`/latest-test.js`) || Path(`/latest-test.map.js`))
         - traefik.http.middlewares.${STACK_NAME}-client-compress.compress=true
         - traefik.http.services.${STACK_NAME}-client.loadbalancer.server.port=80
 networks:
