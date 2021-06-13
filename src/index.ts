@@ -63,5 +63,14 @@ new Perfume({
 });
 
 (async function () {
-  await trackPageView();
+  trackPageView();
+
+  const historyPushState = history.pushState;
+  if (historyPushState) {
+    history.pushState = function (state, title, url) {
+      trackPageView();
+      historyPushState.apply(this, [state, title, url]);
+    };
+    addEventListener("popstate", trackPageView);
+  }
 })();
