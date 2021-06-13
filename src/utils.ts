@@ -1,11 +1,12 @@
 export const http = (url: string): Promise<Response> => {
   return new Promise((resolve, reject) => {
+    const ct = "application/json";
     fetch(url, {
       method: "GET",
       credentials: "omit",
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: ct,
+        "Content-Type": ct,
       },
     })
       .then((response: Response) => {

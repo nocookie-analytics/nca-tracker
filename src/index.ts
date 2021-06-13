@@ -9,16 +9,15 @@ const eventUrl = `${domain}/api/v1/e/`;
 let pageViewId: string = "";
 
 const getTimezone = (): string => {
-  let tz: string;
+  let tz: string = "";
   try {
     tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  } catch (e) {
-    tz = "";
-  }
+  } catch (e) {}
   return tz;
 };
 
 const pendingEvents: Array<Array<string>> = [];
+
 const reportMetric = async (metricName: string, metricValue: string) => {
   const urlParams = new URLSearchParams({
     et: "metric",
@@ -45,7 +44,6 @@ const trackPageView = async () => {
   const result = await resp.json();
   pageViewId = result.pvid;
   pendingEvents.forEach(async ([metricName, metricValue]) => {
-    console.log(metricName, metricValue);
     await reportMetric(metricName, metricValue);
   });
 };
@@ -54,17 +52,12 @@ new Perfume({
   resourceTiming: false,
   analyticsTracker: async ({ metricName, data }) => {
     data = data as IPerfumeNavigationTiming;
-    switch (metricName) {
-      case "lcp":
-      case "fid":
-      case "fp":
-      case "cls":
-      case "lcpFinal":
-        if (!pageViewId) {
-          pendingEvents.push([metricName, data.toString()]);
-        } else {
-          reportMetric(metricName, data.toString());
-        }
+    if (["lcp", "fid", "fp", "cls", "lcpFinal"].includes(metricName)) {
+      if (!pageViewId) {
+        pendingEvents.push([metricName, data.toString()]);
+      } else {
+        reportMetric(metricName, data.toString());
+      }
     }
   },
 });
