@@ -1,3 +1,4 @@
+// TODO: Make this into a dumb old-school javascript file, so it doesn't need to be transpiled
 import Perfume from "perfume.js";
 import { IPerfumeNavigationTiming } from "perfume.js/dist/types/types";
 import { http } from "./utils";
@@ -37,6 +38,8 @@ const trackPageView = async () => {
     url: document.URL,
     ref: document.referrer,
     tz: getTimezone(),
+    w: screen.width.toString(),
+    h: screen.height.toString(),
   });
   const url = `${eventUrl}?${urlParams.toString()}`;
   const resp = await http(url);
