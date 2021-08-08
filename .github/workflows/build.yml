@@ -7,19 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     container: docker/compose
 
-    env:
-      DOCKER_REGISTRY: eu.gcr.io
-      DOCKER_IMAGE_NAME: no-cookie-analytics/nca-client
-
     steps:
     - uses: actions/checkout@v2
 
     - name: Build client image
       uses: whoan/docker-build-with-cache-action@v5
       with:
-        username: _json_key
-        password: "${{ secrets.GCP_SA_KEY }}"
-        registry: ${{ env.DOCKER_REGISTRY }}
-        image_name: ${{ env.DOCKER_IMAGE_NAME }}
+        registry: ghcr.io
+        username: "${{ github.actor }}"
+        password: "${{ secrets.GITHUB_TOKEN }}"
+        image_name: nca-client
         image_tag: ${{ github.sha }}
         push_git_tag: true
