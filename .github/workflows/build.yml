@@ -14,7 +14,7 @@ jobs:
       uses: whoan/docker-build-with-cache-action@v5
       with:
         registry: ghcr.io
-        username: "${{ github.actor }}"
+        username: nocookie-analytics
         password: "${{ secrets.GITHUB_TOKEN }}"
         image_name: nca-client
         image_tag: ${{ github.sha }}
