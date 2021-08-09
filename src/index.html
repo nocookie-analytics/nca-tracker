@@ -5,11 +5,12 @@
 <body>
   <button>Click me to reload</button>
   <a href="/index.html">Click me to reload the page</a>
+  <a href="/index.html" id="pushMe">Click me to pushState</a>
   <br />
   <br />
   <div></div>
 
-  <script src="./src/index.ts"></script>
+  <script src="./latest.js"></script>
   <script type="text/javascript">
     function getRandomInt(min, max) {
       return min + Math.floor(Math.random() * Math.floor(max - min));
@@ -26,7 +27,15 @@
     }
     const button = document.querySelector('button')
     button.onclick = updateImage;
-    updateImage()
+    updateImage();
+
+    let counter = 0;
+    const pushMe = document.getElementById('pushMe');
+    pushMe.onclick = (e) => {
+      e.preventDefault();
+      history.pushState({}, '', "/Helloworld" + counter)
+      counter += 1;
+    };
   </script>
 </body>
 </html>

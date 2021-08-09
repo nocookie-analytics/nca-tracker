@@ -1,54 +1,26 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "axios": "^0.21.1",
-    "core-js": "^3.9.1",
-    "perfume.js": "^5.3.0",
-    "whatwg-fetch": "^3.6.2"
-  },
+  "name": "nca-tracker",
+  "version": "1.0.0",
+  "description": "Tracking script for nocookieanalytics.com",
+  "main": "latest.js",
+  "dependencies": {},
   "devDependencies": {
-    "@types/node": "^14.14.41",
-    "@types/object-hash": "^2.1.0",
-    "babel-core": "7.0.0-bridge.0",
-    "flow-bin": "^0.147.0",
-    "object-hash": "^2.1.1",
-    "parcel": "^2.0.0-beta.3.1",
-    "parcel-bundler": "^1.12.5",
-    "tslint": "^6.1.2",
-    "typescript": "^4.2.4"
+    "serve": "^12.0.0",
+    "terser": "^5.7.1"
   },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "since 2017-06"
-  ],
   "scripts": {
-    "dev": "parcel index.html",
-    "build": "parcel build src/index.ts -o latest.js",
-    "build-test": "DOMAIN_PREFIX=test. parcel build --no-cache src/index.ts -o latest-test.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "terser --compress --mangle -o dist/latest.js -- src/latest.js",
+    "serve": "serve src"
   },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts",
-      "tsx"
-    ],
-    "transform": {
-      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    },
-    "testMatch": [
-      "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
-    ],
-    "testURL": "http://localhost/"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nocookie-analytics/nca-tracker.git"
+  },
+  "author": "Gaganpreet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nocookie-analytics/nca-tracker/issues"
+  },
+  "homepage": "https://github.com/nocookie-analytics/nca-tracker#readme"
 }
