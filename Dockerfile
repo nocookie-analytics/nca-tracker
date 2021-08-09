@@ -8,9 +8,7 @@ RUN yarn install --frozen-lockfile
 
 COPY ./ /app/
 
-RUN yarn build
-
-RUN yarn build-test
+RUN mkdir -p dist && yarn build
 
 
 FROM nginx:latest
