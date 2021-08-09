@@ -5,11 +5,13 @@
   "main": "latest.js",
   "dependencies": {},
   "devDependencies": {
+    "serve": "^12.0.0",
     "terser": "^5.7.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "terser --compress --mangle -o dist/latest.js -- latest.js"
+    "build": "terser --compress --mangle -o dist/latest.js -- src/latest.js",
+    "serve": "serve src"
   },
   "repository": {
     "type": "git",
