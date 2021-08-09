@@ -2,14 +2,14 @@
   "name": "nca-tracker",
   "version": "1.0.0",
   "description": "Tracking script for nocookieanalytics.com",
-  "main": "latest-src.js",
+  "main": "latest.js",
   "dependencies": {},
   "devDependencies": {
     "terser": "^5.7.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "terser --compress --mangle -o dist/latest.js -- latest-src.js"
+    "build": "terser --compress --mangle -o dist/latest.js -- latest.js"
   },
   "repository": {
     "type": "git",
