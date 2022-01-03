@@ -11,7 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "terser --compress --mangle -o dist/latest.js -- src/latest.js",
-    "serve": "serve src"
+    "serve": "serve src -l 1234"
   },
   "repository": {
     "type": "git",

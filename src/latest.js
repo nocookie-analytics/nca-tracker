@@ -1,15 +1,18 @@
 (function () {
-  var pageViewId = '';
-  var reportServer = 'nocookieanalytics.com';
-  var protocol = 'https';
+  var pageViewId = "";
+  var reportServer = "nocookieanalytics.com";
+  var protocol = "http";
   var me = document.currentScript;
-  if (me && me.attributes['data-domain']) {
-    reportServer = me.attributes['data-domain'].value;
+  if (me && me.attributes["data-domain"]) {
+    reportServer = me.attributes["data-domain"].value;
   }
-  var eventUrl = protocol + '://' + reportServer + '/api/v1/e/';
+  if (me && me.attributes["data-protocol"]) {
+    protocol = me.attributes["data-protocol"].value;
+  }
+  var eventUrl = protocol + "://" + reportServer + "/api/v1/e/";
 
   function getTimezone() {
-    var tz = '';
+    var tz = "";
     try {
       tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     } catch (e) {}
@@ -18,32 +21,50 @@
 
   function httpGet(url) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
+    xhr.open("GET", url, true);
     xhr.send(null);
+    xhr.onload = () => {
+      try {
+        var data = JSON.parse(xhr.response);
+        pageViewId = data.pvid;
+      } catch (e) {
+        pageViewId = "";
+        console.error("Error while parsing JSON: ", e);
+      }
+    };
   }
 
-  function reportMetric(metricName, metricValue) {
+  function reportCustomEvent(eventName, eventValue) {
+    if (!pageViewId || !pageViewId.length) {
+      console.error("No page view has been recorded yet");
+    }
+    if (eventName === undefined || eventName === null) {
+      console.error("Missing event name, event ignored");
+      return;
+    }
     var urlParams = new URLSearchParams({
-      et: 'metric',
+      et: "custom",
       url: document.URL,
       pvid: pageViewId,
-      mn: metricName,
-      mv: metricValue.toString(),
+      event_name: eventName,
     });
-    var url = eventUrl + '?' + urlParams.toString();
+    if (eventValue) {
+      urlParams.set(event_value, eventValue);
+    }
+    var url = eventUrl + "?" + urlParams.toString();
     httpGet(url);
   }
 
   function trackPageView() {
     var urlParams = new URLSearchParams({
-      et: 'page_view',
+      et: "page_view",
       url: document.URL,
       ref: document.referrer,
       tz: getTimezone(),
       w: screen.width.toString(),
       h: screen.height.toString(),
     });
-    var url = eventUrl + '?' + urlParams.toString();
+    var url = eventUrl + "?" + urlParams.toString();
     httpGet(url);
   }
 
@@ -54,10 +75,11 @@
         trackPageView();
         historyPushState.apply(this, [state, title, url]);
       };
-      addEventListener('popstate', trackPageView);
+      addEventListener("popstate", trackPageView);
     }
   }
 
   trackPageView();
   trackURLChanges();
+  window.nca_event = reportCustomEvent;
 })();
