@@ -9,7 +9,7 @@
   if (me && me.attributes["data-protocol"]) {
     protocol = me.attributes["data-protocol"].value;
   }
-  var eventUrl = protocol + "://" + reportServer + "/api/v1/e/";
+  var eventUrl = protocol + "://" + reportServer + "/api/v1/e";
 
   function getTimezone() {
     var tz = "";
@@ -26,7 +26,7 @@
     xhr.onload = () => {
       try {
         var data = JSON.parse(xhr.response);
-        pageViewId = data.pvid;
+        pageViewId = data.page_view_id;
       } catch (e) {
         pageViewId = "";
         console.error("Error while parsing JSON: ", e);
@@ -43,28 +43,26 @@
       return;
     }
     var urlParams = new URLSearchParams({
-      et: "custom",
       url: document.URL,
-      pvid: pageViewId,
+      page_view_id: pageViewId,
       event_name: eventName,
     });
     if (eventValue) {
       urlParams.set(event_value, eventValue);
     }
-    var url = eventUrl + "?" + urlParams.toString();
+    var url = eventUrl + "/custom?" + urlParams.toString();
     httpGet(url);
   }
 
   function trackPageView() {
     var urlParams = new URLSearchParams({
-      et: "page_view",
       url: document.URL,
       ref: document.referrer,
       tz: getTimezone(),
       w: screen.width.toString(),
       h: screen.height.toString(),
     });
-    var url = eventUrl + "?" + urlParams.toString();
+    var url = eventUrl + "/page_view?" + urlParams.toString();
     httpGet(url);
   }
 
@@ -81,5 +79,11 @@
 
   trackPageView();
   trackURLChanges();
-  window.nca_event = reportCustomEvent;
+  if (!window.nca_event) {
+    window.nca_event = reportCustomEvent;
+  } else {
+    console.error(
+      "You've two nocookieanalytics scripts on your website, this is usually a configuration error"
+    );
+  }
 })();
