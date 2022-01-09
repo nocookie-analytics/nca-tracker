@@ -1,7 +1,7 @@
 (function () {
   var pageViewId = "";
   var reportServer = "nocookieanalytics.com";
-  var protocol = "http";
+  var protocol = "https";
   var me = document.currentScript;
   if (me && me.attributes["data-domain"]) {
     reportServer = me.attributes["data-domain"].value;
