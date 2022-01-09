@@ -6,6 +6,7 @@
   <button>Click me to reload</button>
   <a href="/index.html">Click me to reload the page</a>
   <a href="/index.html" id="pushMe">Click me to pushState</a>
+  <a href="/index.html" id="event">Click me to generate event</a>
   <br />
   <br />
   <div></div>
@@ -35,6 +36,12 @@
       e.preventDefault();
       history.pushState({}, '', "/Helloworld" + counter)
       counter += 1;
+    };
+
+    const event = document.getElementById('event');
+    event.onclick = (e) => {
+      e.preventDefault();
+      nca_event("event");
     };
   </script>
 </body>
