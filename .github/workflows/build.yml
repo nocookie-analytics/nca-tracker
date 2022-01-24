@@ -10,12 +10,33 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build client image
-      uses: whoan/docker-build-with-cache-action@v5
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
       with:
         registry: ghcr.io
-        username: nocookie-analytics
-        password: "${{ secrets.GITHUB_TOKEN }}"
-        image_name: nca-client
-        image_tag: ${{ github.sha }}
-        push_git_tag: true
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ghcr.io/nocookie-analytics/nca-tracker
+        tags: |
+          type=ref,event=branch
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+
+    - name: Build and push
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        context: .
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
