@@ -4,7 +4,7 @@
   var protocol = "https";
   var me = document.currentScript;
   if (me) {
-    var url = new URL(jsFileUrl);
+    var url = new URL(me.src);
     reportServer = url.hostname;
   }
   if (me && me.attributes["data-domain"]) {
