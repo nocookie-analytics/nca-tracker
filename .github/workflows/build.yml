@@ -27,7 +27,7 @@ jobs:
         images: ghcr.io/nocookie-analytics/nca-tracker
         tags: |
           type=ref,event=branch
-          type=sha,format=long
+          type=sha,format=long,prefix=
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
 
