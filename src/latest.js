@@ -3,6 +3,10 @@
   var reportServer = "nocookieanalytics.com";
   var protocol = "https";
   var me = document.currentScript;
+  if (me) {
+    var url = new URL(jsFileUrl);
+    reportServer = url.hostname;
+  }
   if (me && me.attributes["data-domain"]) {
     reportServer = me.attributes["data-domain"].value;
   }
