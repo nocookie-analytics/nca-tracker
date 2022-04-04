@@ -5,13 +5,8 @@
   var me = document.currentScript;
   if (me) {
     var url = new URL(me.src);
-    reportServer = url.hostname;
-  }
-  if (me && me.attributes["data-domain"]) {
-    reportServer = me.attributes["data-domain"].value;
-  }
-  if (me && me.attributes["data-protocol"]) {
-    protocol = me.attributes["data-protocol"].value;
+    reportServer = url.hostname || me.attributes["data-report-domain"].value;
+    protocol = protocol || me.attributes["data-protocol"].value;
   }
   var eventUrl = protocol + "://" + reportServer + "/api/v1/e";
 
@@ -33,17 +28,17 @@
         pageViewId = data.page_view_id;
       } catch (e) {
         pageViewId = "";
-        console.error("Error while parsing JSON: ", e);
+        console.error("JSONParseErr: ", e);
       }
     };
   }
 
   function reportCustomEvent(eventName, eventValue) {
     if (!pageViewId || !pageViewId.length) {
-      console.error("No page view has been recorded yet");
+      console.error("No page view recorded yet");
     }
     if (eventName === undefined || eventName === null) {
-      console.error("Missing event name, event ignored");
+      console.error("Missing event name");
       return;
     }
     var urlParams = new URLSearchParams({
@@ -52,7 +47,7 @@
       event_name: eventName,
     });
     if (eventValue) {
-      urlParams.set(event_value, eventValue);
+      urlParams.set("event_value", eventValue);
     }
     var url = eventUrl + "/custom?" + urlParams.toString();
     httpGet(url);
@@ -86,8 +81,6 @@
   if (!window.nca_event) {
     window.nca_event = reportCustomEvent;
   } else {
-    console.error(
-      "You've two nocookieanalytics scripts on your website, this is usually a configuration error"
-    );
+    console.error("Two nocookieanalytics scripts detected");
   }
 })();
