@@ -48,5 +48,6 @@ module.exports = {
     },
     compress: true,
     port: 1234,
+    allowedHosts: "all",
   },
 };

@@ -1,3 +1,6 @@
+/// #if webvitals
+import { getLCP, getFID, getCLS } from "web-vitals";
+/// #endif
 (function () {
   var pageViewId = "";
   var reportServer = "nocookieanalytics.com";
@@ -83,4 +86,10 @@
   } else {
     console.error("Two nocookieanalytics scripts detected");
   }
+
+  /// #if webvitals
+  getCLS(console.log);
+  getFID(console.log);
+  getLCP(console.log);
+  /// #endif
 })();
